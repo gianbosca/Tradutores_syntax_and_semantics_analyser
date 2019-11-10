@@ -2,25 +2,21 @@ grammar TGB2;
 
 options {
 	language=Java;
-	backtrack=true;
 }
 
-prog : (COMANDO SEMICOLON)+
+prog : (comando SEMICOLON)+
 	;
 
 NEWLINE : ('\r' | '\n')+ ;
 
 WS:		(' '|'\n'|'\r')+ {skip();} ; // ignore whitespace
 
-INT_POSITIVE 	:	('0'..'9')+;
+INT_POS :('0'..'9')+ {$INT_POS.text};
 
-INT  :	('-')INT_POSITIVE | INT_POSITIVE;
-
-DIGIT		: ('0'..'9');
-
-ID		: ('a'..'z'|'A'..'Z')('a'..'z'|DIGIT|'A'..'Z')*;
-
-EQUAL 		: '=';
+id		: 
+	('a'..'z'|'A'..'Z')('a'..'z'|'A'..'Z'|'0'..'9')*;
+	
+equal 		: ':=';
 
 L_PAREN		: '(';
 
@@ -38,7 +34,7 @@ COMMA		: ',';
 
 SEMICOLON	: ';';
 
-FLOAT 		: (INT)'.'INT_POSITIVE;
+FLOAT 		: INT_POS '.' INT_POS;
 
 ARITH_OP 	: '+'|'-'|'*'|'/'|'%';
 
@@ -46,28 +42,21 @@ REL_OP 		: '<'|'<='|'=='|'!='|'>='|'>'|'?'|':';
 
 LOGIC_OP	: '&&'|'||';
 
-EXPR	:
-	INT  ('+' | '-' | '*' | '/') EXPR 
-	| INT
-	| '(' EXPR ')'
+expr :
+	INT_POS '+' expr 
+	| INT_POS '-' expr 
+	| INT_POS '*' expr 
+	| INT_POS '/' expr 
+	| INT_POS 
+	| '(' expr ')'
     ;
 
-COMANDO_ATRIBUICAO :	
-	(ID) (':=') EXPR 
-	;
-
-COMANDO_CONDICIONAL
-	:	
-	;
-	
-COMANDO_WHILE
-	:
-	;
-	
-COMANDO	: 
-	COMANDO_ATRIBUICAO
+comando_atrib :	
+	id equal expr 
 	;
 
 	
-
+comando	: 
+	comando_atrib
+	;
 
