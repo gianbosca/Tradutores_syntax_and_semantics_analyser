@@ -13,7 +13,7 @@ import java.lang.*;
   int y;
  }
 
-prog : comando another_comando;
+prog : comando another_comando+;
 
 ID: 		('a'..'z')+ ;
 
@@ -23,28 +23,32 @@ NUMBER  :	('0'..'9')+;
 
 
 tras	:
-	('TRAS') ' ' NUMBER {y-= Integer.parseInt($NUMBER.text); System.out.println("x: "+x+"\ny: "+y+"\n");}
+	('TRAS') ' ' NUMBER {y-= Integer.parseInt($NUMBER.text); }
 	;
 	
 	
 frente	:
-	('FRENTE') ' ' NUMBER {y+= Integer.parseInt($NUMBER.text); System.out.println("x: "+x+"\ny: "+y+"\n");}
+	('FRENTE') ' ' NUMBER {y+= Integer.parseInt($NUMBER.text); }
 	;
 	
 direita	:
-	('DIREITA') ' ' NUMBER {x+= Integer.parseInt($NUMBER.text); System.out.println("x: "+x+"\ny: "+y+"\n");}
+	('DIREITA') ' ' NUMBER {x+= Integer.parseInt($NUMBER.text); }
 	;
 	
 	
 esquerda:
-	('ESQUERDA') ' ' NUMBER {x-= Integer.parseInt($NUMBER.text); System.out.println("x: "+x+"\ny: "+y+"\n");}
+	('ESQUERDA') ' ' NUMBER {x-= Integer.parseInt($NUMBER.text); }
 	;
 	
 
 basico	:	 
 	frente|tras|direita|esquerda;
+	
+comando_entao: (' ENTAO ' (basico) {System.out.println("x: "+x+"\ny: "+y+"\n");})+ ;
 
-comando :  (basico);
+comando_apos: (' APOS ' (basico) {System.out.println("x: "+x+"\ny: "+y+"\n");})+ ;
+
+comando :  (basico  {System.out.println("x: "+x+"\ny: "+y+"\n");});
 
 another_comando 
-	: (' ENTAO ' (basico))+ ;
+	: comando_entao | comando_apos;
