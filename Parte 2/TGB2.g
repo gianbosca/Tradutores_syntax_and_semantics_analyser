@@ -7,16 +7,25 @@ options {
 prog : (comando SEMICOLON)+
 	;
 
-NEWLINE : ('\r' | '\n')+ ;
+id		: 
+	(LETTER_LOW|LETTER_UP|'_') (LETTER_LOW|LETTER_UP|INT_POS|'_')*;
+
+NEWLINE : 	('\r' | '\n')+ ;
 
 WS:		(' '|'\n'|'\r')+ {skip();} ; // ignore whitespace
 
-INT_POS :('0'..'9')+ {$INT_POS.text};
+INT_POS :	('0'..'9')+ ;
 
-id		: 
-	('a'..'z'|'A'..'Z')('a'..'z'|'A'..'Z'|'0'..'9')*;
+LETTER_UP
+	: 	 'A'..'Z';
 	
-equal 		: ':=';
+LETTER_LOW
+	: 	 'a'..'z';
+
+UNDER_SCORE 
+	:	 '_';
+	
+ATRIB 		: ':=';
 
 L_PAREN		: '(';
 
@@ -52,7 +61,7 @@ expr :
     ;
 
 comando_atrib :	
-	id equal expr 
+	id ATRIB expr 
 	;
 
 	

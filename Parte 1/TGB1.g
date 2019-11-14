@@ -9,12 +9,11 @@ import java.lang.*;
 }
 
 @members {
-  String s;
-  String x;
-  String y;
-}
+  int x;
+  int y;
+ }
 
-prog : COMANDO ;
+prog : comando another_comando;
 
 ID: 		('a'..'z')+ ;
 
@@ -23,16 +22,29 @@ WS:		(' '|'\n'|'\r')+ {skip();} ; // ignore whitespace
 NUMBER  :	('0'..'9')+;
 
 
-  
-
-B1	returns [int xx]:
-	('TRAS') ' ' NUMBER {$xx+= Integer.parseInt($NUMBER.text); System.out.println($xx);}
+tras	:
+	('TRAS') ' ' NUMBER {y-= Integer.parseInt($NUMBER.text); System.out.println("x: "+x+"\ny: "+y+"\n");}
 	;
 	
 	
-B2	returns [int zz]:
-	('FRENTE') ' ' NUMBER {$zz-= Integer.parseInt($NUMBER.text); System.out.println($zz);}
+frente	:
+	('FRENTE') ' ' NUMBER {y+= Integer.parseInt($NUMBER.text); System.out.println("x: "+x+"\ny: "+y+"\n");}
+	;
+	
+direita	:
+	('DIREITA') ' ' NUMBER {x+= Integer.parseInt($NUMBER.text); System.out.println("x: "+x+"\ny: "+y+"\n");}
+	;
+	
+	
+esquerda:
+	('ESQUERDA') ' ' NUMBER {x-= Integer.parseInt($NUMBER.text); System.out.println("x: "+x+"\ny: "+y+"\n");}
 	;
 	
 
-COMANDO returns [String aa]:  (B1) ' ENTAO ' (B2) {$aa=$aa+$B1.xx;System.out.println($aa);};
+basico	:	 
+	frente|tras|direita|esquerda;
+
+comando :  (basico);
+
+another_comando 
+	: (' ENTAO ' (basico))+ ;
