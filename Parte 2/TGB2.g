@@ -1,14 +1,19 @@
 grammar TGB2;
 
 options {
+	backtrack=true;
 	language=Java;
 }
 
-prog : (comando SEMICOLON)+
+@members {
+
+}
+
+prog : (comandos)+
 	;
 
 id		: 
-	(LETTER_LOW|LETTER_UP|'_') (LETTER_LOW|LETTER_UP|INT_POS|'_')*;
+	(LETTER_LOW|LETTER_UP|UNDER_SCORE) (LETTER_LOW|LETTER_UP|INT_POS|UNDER_SCORE)*;
 
 NEWLINE : 	('\r' | '\n')+ ;
 
@@ -47,25 +52,34 @@ FLOAT 		: INT_POS '.' INT_POS;
 
 ARITH_OP 	: '+'|'-'|'*'|'/'|'%';
 
-REL_OP 		: '<'|'<='|'=='|'!='|'>='|'>'|'?'|':';
+REL_OP 		: '<'|'<='|'='|'!='|'>='|'>'|'?'|':';
 
 LOGIC_OP	: '&&'|'||';
 
-expr :
-	INT_POS '+' expr 
-	| INT_POS '-' expr 
-	| INT_POS '*' expr 
-	| INT_POS '/' expr 
-	| INT_POS 
-	| '(' expr ')'
-    ;
-
-comando_atrib :	
-	id ATRIB expr 
-	;
-
+expr_op :
+	  ((INT_POS|id) '+' expr_op)
+	| ((INT_POS|id) '-' expr_op) 
+	| ((INT_POS|id) '*' expr_op) 
+	| ((INT_POS|id) '/' expr_op)
+	| id
+	| INT_POS
+	| (L_PAREN expr_op R_PAREN)
+	    ;
 	
-comando	: 
-	comando_atrib
+expr_rel: (expr_op REL_OP expr_op) ;
+	
+comando_atrib :	
+	id ATRIB expr_op SEMICOLON
 	;
+	
+comandos: 
+	comando_if | comando_atrib;
+
+somethingElse: 
+	('else' comandos)
+	|;
+	
+comando_if
+	: ('if ' expr_rel 'then' comandos somethingElse);
+
 
