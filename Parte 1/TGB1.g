@@ -15,7 +15,7 @@ import java.lang.*;
   int yTemp =0 ;
  }
 
-prog : comando;
+prog : comando+;
 
 ID: 		('a'..'z')+ ;
 
@@ -26,28 +26,40 @@ NUMBER  :	('0'..'9')+;
 
 tras	:
 	('TRAS') ' ' NUMBER 
-	{if(yTemp!=0) y-= Integer.parseInt($NUMBER.text) + yTemp; else y-= Integer.parseInt($NUMBER.text); } 
+	{if(yTemp!=0) y-= Integer.parseInt($NUMBER.text) + yTemp; else y-= Integer.parseInt($NUMBER.text); }
+	{if(xTemp!=0) x+= xTemp;} 
 	{System.out.println("x: "+x+"\ny: "+y+"\n");}
+	{xTemp=0;}
+	{yTemp=0;}
 	;
 	
 	
 frente	:
 	('FRENTE') ' ' NUMBER 
-	{if(yTemp!=0) y+= Integer.parseInt($NUMBER.text) + yTemp; else y+= Integer.parseInt($NUMBER.text); } 
+	{if(yTemp!=0) y+= Integer.parseInt($NUMBER.text) + yTemp; else y+= Integer.parseInt($NUMBER.text); }
+	{if(xTemp!=0) x+= xTemp;} 
 	{System.out.println("x: "+x+"\ny: "+y+"\n");}
+	{xTemp=0;}
+	{yTemp=0;}
 	;
 	
 direita	:
 	('DIREITA') ' ' NUMBER 
 	{if(xTemp!=0) x+= Integer.parseInt($NUMBER.text) + xTemp; else x+= Integer.parseInt($NUMBER.text); } 
+	{if(yTemp!=0) y+= yTemp;} 
 	{System.out.println("x: "+x+"\ny: "+y+"\n");}
+	{xTemp=0;}
+	{yTemp=0;}
 	;
 	
 	
 esquerda:
 	('ESQUERDA') ' ' NUMBER 
 	{if(xTemp!=0) x-= Integer.parseInt($NUMBER.text) - xTemp; else x-= Integer.parseInt($NUMBER.text); } 
+	{if(yTemp!=0) y+= yTemp;} 
 	{System.out.println("x: "+x+"\ny: "+y+"\n");}
+	{xTemp=0;}
+	{yTemp=0;}
 	;	
 	
 	
