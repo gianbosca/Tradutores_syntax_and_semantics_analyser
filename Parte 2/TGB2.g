@@ -1,7 +1,6 @@
 grammar TGB2;
 
 options {
-	backtrack=true;
 	language=Java;
 }
 
@@ -9,15 +8,12 @@ options {
 
 }
 
-prog : (comandos)+
-	;
+prog : comando+;
 
 id		: 
 	(LETTER_LOW|LETTER_UP|UNDER_SCORE) (LETTER_LOW|LETTER_UP|INT_POS|UNDER_SCORE)*;
 
-NEWLINE : 	('\r' | '\n')+ ;
-
-WS:		(' '|'\n'|'\r')+ {skip();} ; // ignore whitespace
+WS:		(' '|'\n'|'\t'|'\r'|'\cr')+ {skip();} ; // ignore whitespace
 
 INT_POS :	('0'..'9')+ ;
 
@@ -72,14 +68,12 @@ comando_atrib :
 	id ATRIB expr_op SEMICOLON
 	;
 	
-comandos: 
-	comando_if | comando_atrib;
-
 somethingElse: 
-	('else' comandos)
+	('else' comando)
 	|;
 	
 comando_if
-	: ('if ' expr_rel 'then' comandos somethingElse);
+	: ('if ' expr_rel 'then' comando somethingElse);
 
-
+comando: 
+	(comando_if) | (comando_atrib);
