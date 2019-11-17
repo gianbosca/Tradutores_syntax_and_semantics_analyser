@@ -75,5 +75,11 @@ somethingElse:
 comando_if
 	: ('if ' expr_rel 'then' comando somethingElse);
 
+comando_while 
+	: 'while' expr_rel 'do' ​(comando+);
+
 comando: 
-	(comando_if) | (comando_atrib);
+	(comando_if {System.out.println("if comand detect!");}) 
+	| (comando_atrib {System.out.println("atrib comand detect!");})
+	| (comando_while {System.out.println("while comand detect!");})
+	;
